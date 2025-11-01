@@ -1,202 +1,617 @@
-# SMT App - מערכת ניהול הסעות
+# מסיעי סמי ומשה - SMT App 🚌
 
-מערכת פנימית לניהול הסעות ילדים עם צרכים מיוחדים (Special Medical Transportation).
+מערכת ניהול מתקדמת להסעות ילדים עם צרכים מיוחדים
+
+---
 
 ## 📋 תיאור הפרויקט
 
-מערכת זו נועדה לנהל את כל ההיבטים של הסעות ילדים עם צרכים מיוחדים, כולל:
-- ניהול פרטי ילדים
-- ניהול נהגים ורכבים
-- תכנון מסלולי הסעה
-- מעקב בזמן אמת
-- דוחות וניתוחים
+**מערכת ניהול הסעות מקיפה** שנועדה לנהל את כל ההיבטים של הסעות ילדים עם צרכים מיוחדים, כולל ניהול ילדים, הורים, נהגים, מלווים, מוסדות וגופים מפקחים.
+
+### ✨ תכונות עיקריות
+
+- 🔍 **חיפוש וסינון מתקדם** - חיפוש בכל מסד הנתונים עם סינון לפי קטגוריות
+- 📊 **ניהול מסד נתונים מלא** - ילדים, הורים, נהגים, מלווים, מוסדות וגופים
+- 📱 **פורמט טלפון אוטומטי** - עיצוב מספרי טלפון עם מקפים (050-123-4567)
+- 🎨 **עיצוב מודרני ומקצועי** - דף כניסה מעוצב עם אנימציות
+- ⚡ **Real-time Database** - עדכונים בזמן אמת דרך Supabase
+- 🌐 **תמיכה מלאה ב-RTL** - כל המערכת מימין לשמאל
+
+---
 
 ## 🏗️ ארכיטקטורה וטכנולוגיות
 
-### Frontend
-- **Next.js 14** - React framework עם App Router
-- **TypeScript** - לבטיחות קוד מקסימלית
-- **Tailwind CSS** - לעיצוב מהיר ואחיד
-- **ShadCN/ui** - ספריית קומפוננטות מתקדמת
+### Frontend Stack
+- **Next.js 14.2.15** - React framework עם App Router
+- **TypeScript** - בטיחות קוד מקסימלית
+- **Tailwind CSS** - עיצוב מהיר ואחיד
+- **ShadCN/ui v4** - ספריית קומפוננטות מתקדמת
+- **Lucide React** - אייקונים מודרניים
 
 ### Backend & Database
-- **Supabase** - מסד נתונים PostgreSQL עם real-time capabilities
-- **Supabase Auth** - אימות משתמשים (בעתיד)
-- **Supabase Storage** - אחסון קבצים (בעתיד)
+- **Supabase** - PostgreSQL עם real-time capabilities
+- **Row Level Security (RLS)** - אבטחת נתונים ברמת השורה
+- **Supabase Storage** - אחסון תמונות (מוכן לשימוש)
+- **Real-time Subscriptions** - עדכונים בזמן אמת
 
-### עיצוב
-- **RTL Support** - תמיכה מלאה בכיוון ימין לשמאל
-- **פונט Heebo** - פונט עברי מקצועי ונוח לקריאה
-- **Responsive Design** - התאמה לכל הגדלים של מסכים
+### עיצוב ו-UX
+- **RTL Full Support** - תמיכה מלאה בכיוון ימין לשמאל
+- **פונט Heebo** - פונט עברי מקצועי מ-Google Fonts
+- **Responsive Design** - מותאם לכל גדלי מסכים
+- **Animations** - אנימציות חלקות ומרשימות
 
-## 🎨 עקרונות עיצוב
+---
 
-### כיווניות (RTL)
-- כל האפליקציה פועלת מימין לשמאל
-- כל הקומפוננטות מותאמות לעברית
-- שימוש בפונטים עבריים איכוטיים
+## 🎨 עקרונות עיצוב חשובים
 
-### חוויית משתמש
-- ממשק נקי ופשוט
-- ניווט אינטואיטיבי
-- פידבק ויזואלי ברור
-- נגישות למשתמשים
+### כיווניות RTL - מימין לשמאל
 
-### קוד נקי
-- TypeScript לכל הקוד
-- Component-based architecture
-- עקרונות DRY (Don't Repeat Yourself)
-- תיעוד מלא של קוד מורכב
+**חוק ברזל**: כל המערכת פועלת מימין לשמאל!
 
-## 📁 מבנה תיקיות
+#### תפריטים נפתחים (Select)
+```
+┌─────────────────────┐
+│  אמא              ▼ │  ← תפריט סגור: טקסט ימין, חץ שמאל
+└─────────────────────┘
+
+┌─────────────────────┐
+│  אמא              ✓ │  ← תפריט פתוח: טקסט ימין, סימון שמאל
+│  אבא                │
+│  אחר                │
+└─────────────────────┘
+```
+
+**יישום טכני**:
+- שימוש ב-`flex-row-reverse` להיפוך סדר אלמנטים
+- `text-right` לטקסט
+- סימונים ב-`absolute left-2`
+
+#### כפתורים וממשק
+- כפתורים עם אייקונים: האייקון **משמאל** לטקסט
+- כותרות: יישור לימין
+- טפסים: תוויות מעל שדות, טקסט מיושר לימין
+- טבלאות: כותרות ותוכן מיושרים לימין
+
+### פרופורציות ועיצוב
+
+- **שדות קטנים למידע קטן**: גיל (100px), מין (120px), אות (100px)
+- **שדות בינוניים**: טלפון, תפקיד, קשר
+- **שדות רחבים**: כתובת, שם מוסד, הערות
+- **מרווחים אחידים**: 16px בין אלמנטים, 24px בין קטעים
+
+### הפרדה ויזואלית
+
+```css
+/* קלף דינמי עם מספור */
+.dynamic-card {
+  background: slate-50;
+  border: 2px solid;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+/* מספור */
+#1, #2, #3... למעלה בפינה ימנית
+```
+
+---
+
+## 📁 מבנה הפרויקט
 
 ```
 SMT_app/
-├── app/                      # Next.js App Router
-│   ├── layout.tsx           # Layout ראשי עם RTL
-│   ├── page.tsx             # דף הבית
-│   └── globals.css          # סגנונות גלובליים
-├── components/              # React Components
-│   └── ui/                  # קומפוננטות UI (ShadCN)
-│       ├── button.tsx
-│       └── card.tsx
-├── lib/                     # Utilities & helpers
-│   ├── utils.ts            # פונקציות עזר
-│   └── supabase/           # Supabase configuration
-│       ├── client.ts       # Browser client
-│       ├── server.ts       # Server client
-│       └── middleware.ts   # Session management
-├── middleware.ts            # Next.js middleware
-├── components.json          # ShadCN configuration
-├── tailwind.config.ts      # Tailwind configuration
-└── package.json            # Dependencies
+├── app/
+│   ├── (dashboard)/           # קבוצת דפים עם sidebar
+│   │   ├── layout.tsx        # Layout עם Sidebar
+│   │   └── dashboard/
+│   │       ├── page.tsx      # דף בית - חיפוש וסינון
+│   │       ├── children/     # ניהול ילדים
+│   │       ├── institutions/ # ניהול מוסדות
+│   │       ├── authorities/  # ניהול גופים
+│   │       ├── drivers/      # ניהול נהגים
+│   │       └── escorts/      # ניהול מלווים
+│   ├── layout.tsx            # Root layout (RTL)
+│   ├── page.tsx              # דף כניסה מעוצב
+│   └── globals.css           # סגנונות גלובליים
+├── components/
+│   ├── ui/                   # ShadCN components
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── dialog.tsx
+│   │   ├── input.tsx
+│   │   ├── select.tsx       # ✨ מותאם RTL
+│   │   ├── textarea.tsx
+│   │   ├── label.tsx
+│   │   └── phone-input.tsx  # 📱 Input עם פורמט טלפון
+│   ├── sidebar.tsx           # תפריט צד
+│   └── dynamic-section.tsx   # קומפוננטה דינמית
+├── lib/
+│   ├── utils.ts              # פונקציות עזר
+│   ├── format-phone.ts       # 📱 פורמט טלפון
+│   └── supabase/
+│       ├── client.ts         # Supabase client
+│       ├── server.ts         # Supabase server
+│       └── middleware.ts     # Session management
+├── supabase/
+│   └── migrations/           # 🗄️ Database migrations
+│       ├── 001_create_children_table.sql
+│       ├── 002_create_institutions_table.sql
+│       ├── 003_create_authorities_table.sql
+│       ├── 004_create_drivers_table.sql
+│       └── 005_create_escorts_table.sql
+├── middleware.ts
+├── components.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── package.json
 ```
+
+---
+
+## 🗄️ מבנה מסד הנתונים
+
+### טבלאות ראשיות
+
+#### 1. **children** (ילדים)
+```sql
+- id (UUID)
+- first_name (TEXT) - שם פרטי *
+- last_name (TEXT) - שם משפחה *
+- gender (TEXT) - מין (זכר/נקבה) *
+- age (INTEGER) - גיל *
+- phone (TEXT) - טלפון
+- home_address (TEXT) - כתובת מגורים *
+- notes (TEXT) - הערות
+- parents (JSONB) - מערך הורים
+- created_at, updated_at
+```
+
+**מבנה הורה (parents)**:
+```json
+{
+  "first_name": "string",
+  "last_name": "string",
+  "relation": "אמא|אבא|אחר",
+  "relation_other": "string?",
+  "phone": "string"
+}
+```
+
+#### 2. **institutions** (מוסדות)
+```sql
+- id (UUID)
+- name (TEXT) - שם המוסד *
+- type (TEXT) - סוג (בית ספר/גן/אחר) *
+- type_other (TEXT) - תיאור אחר
+- letter_code (TEXT) - אות (כחל)
+- address (TEXT) - כתובת *
+- institution_subtype (TEXT) - סוג מוסד *
+- subtype_other (TEXT)
+- waze_link (TEXT) - קישור ווייז
+- image_url (TEXT) - תמונת מקום איסוף
+- contacts (JSONB) - אנשי קשר
+- created_at, updated_at
+```
+
+**מבנה איש קשר (contacts)**:
+```json
+{
+  "first_name": "string",
+  "last_name": "string",
+  "phone": "string",
+  "role": "מורה|גננת|אחר",
+  "role_other": "string?"
+}
+```
+
+#### 3. **authorities** (גופים)
+```sql
+- id (UUID)
+- name (TEXT) - שם הגוף *
+- main_phone (TEXT) - טלפון ראשי *
+- email (TEXT) - אימייל *
+- supervisors (JSONB) - מפקחים
+- created_at, updated_at
+```
+
+**מבנה מפקח (supervisors)**:
+```json
+{
+  "first_name": "string",
+  "last_name": "string",
+  "area": "string",
+  "email": "string"
+}
+```
+
+#### 4. **drivers** (נהגים)
+```sql
+- id (UUID)
+- first_name (TEXT) - שם פרטי *
+- last_name (TEXT) - שם משפחה *
+- car_number (TEXT) - מספר רכב *
+- car_type (TEXT) - סוג רכב *
+- phone (TEXT) - טלפון *
+- notes (TEXT) - הערות
+- created_at, updated_at
+```
+
+#### 5. **escorts** (מלווים)
+```sql
+- id (UUID)
+- first_name (TEXT) - שם פרטי *
+- last_name (TEXT) - שם משפחה *
+- phone (TEXT) - טלפון *
+- notes (TEXT) - הערות
+- created_at, updated_at
+```
+
+### אבטחה (RLS)
+כל הטבלאות כוללות:
+- **SELECT**: גישה לכולם
+- **INSERT/UPDATE/DELETE**: רק למשתמשים מחוברים
+
+### Triggers
+- **updated_at**: מתעדכן אוטומטית בכל שינוי
+
+---
 
 ## 🚀 התקנה והרצה
 
 ### דרישות מקדימות
-- Node.js 18+ 
+- Node.js 18+
 - npm או yarn
 - חשבון Supabase
 
-### שלבי התקנה
+### התקנה
 
-1. **התקנת תלויות**
+1. **Clone הפרויקט**
+```bash
+git clone git@github.com:barmenahem17/SMT_app.git
+cd SMT_app
+```
+
+2. **התקנת תלויות**
 ```bash
 npm install
 ```
 
-2. **הגדרת Supabase**
+3. **הגדרת משתני סביבה**
 
-צור קובץ `.env.local` בתיקיית השורש והעתק את הערכים מ-`env.example`:
-
+צור קובץ `.env.local`:
 ```bash
 cp env.example .env.local
 ```
 
-השג את הערכים מ-Supabase:
-- היכנס ל-[Supabase Dashboard](https://supabase.com/dashboard)
-- בחר בפרויקט **SMT_app**
-- לך ל-**Settings > API**
-- העתק את **Project URL** ואת **anon/public key**
-- הדבק ב-`.env.local`
+הדבק את הערכים מ-Supabase:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-3. **הרצת שרת פיתוח**
+4. **הרצת המיגרציות** (אם צריך)
+
+היכנס ל-Supabase Dashboard ורוץ את המיגרציות מתיקיית `supabase/migrations/`
+
+5. **הפעלת שרת פיתוח**
 ```bash
 npm run dev
 ```
 
-האפליקציה תהיה זמינה ב-[http://localhost:3000](http://localhost:3000)
+האפליקציה תרוץ ב-[http://localhost:3000](http://localhost:3000)
 
-## 🔗 חיבור ל-GitHub
+---
 
-הפרויקט כבר מחובר ל-Git מקומי. לחיבור ל-GitHub:
+## 🎯 דפים ותכונות
 
-### שלב 1: חבר את ה-Repository
-```bash
-git remote add origin https://github.com/barmenahem17/SMT_app.git
+### 1. דף כניסה (`/`)
+- עיצוב מודרני ומרשים
+- אנימציות חלקות
+- 3 קלפי תכונות
+- כפתור "כניסה למערכת"
+
+### 2. דף בית הדשבורד (`/dashboard`)
+**מערכת חיפוש וסינון מתקדמת**
+
+#### חיפוש
+- חיפוש בכל מסד הנתונים
+- חיפוש לפי שם (רק מתחילת המילה)
+- תוצאות בטבלה מעוצבת
+
+#### סינון לפי קטגוריות
+- ילדים
+- הורים
+- מלווים
+- נהגים
+- מפקחים
+- עובדי הוראה
+- מוסדות
+
+#### תצוגת תוצאות
+טבלה עם:
+- סוג הרשומה (תג צבעוני)
+- שם
+- פרטים
+- מידע נוסף
+
+### 3. ניהול ילדים (`/dashboard/children`)
+- הוספה, עריכה, מחיקה
+- שדות: שם, מין, גיל, טלפון, כתובת, הערות
+- **הוספת הורים דינמית** (רק אחרי לחיצה)
+- פורמט טלפון אוטומטי
+- הפרדה ויזואלית בין הורים
+
+### 4. ניהול מוסדות (`/dashboard/institutions`)
+- הוספה, עריכה, מחיקה
+- שדות: שם, סוג, אות, כתובת, סוג מוסד, קישור ווייז, תמונה
+- **הוספת אנשי קשר דינמית** (רק אחרי לחיצה)
+- תפקיד לכל איש קשר (מורה/גננת/אחר)
+
+### 5. ניהול גופים (`/dashboard/authorities`)
+- הוספה, עריכה, מחיקה
+- שדות: שם, טלפון, אימייל
+- **הוספת מפקחים דינמית** (רק אחרי לחיצה)
+- שדות מפקח: שם, איזור, אימייל
+
+### 6. ניהול נהגים (`/dashboard/drivers`)
+- הוספה, עריכה, מחיקה
+- שדות: שם, מספר רכב, סוג רכב, טלפון, הערות
+
+### 7. ניהול מלווים (`/dashboard/escorts`)
+- הוספה, עריכה, מחיקה
+- שדות: שם, טלפון, הערות
+
+---
+
+## 🛠️ קומפוננטות מיוחדות
+
+### PhoneInput
+קומפוננטת input עם פורמט טלפון אוטומטי:
+```typescript
+<PhoneInput
+  value={phone}
+  onChange={(value) => setPhone(value)}
+  placeholder="050-123-4567"
+/>
 ```
 
-### שלב 2: בדוק את החיבור
-```bash
-git remote -v
+פורמט: `050-123-4567`
+
+### DynamicSection
+קומפוננטה להוספת רשומות דינמית:
+```typescript
+<DynamicSection
+  title="הורים"
+  addButtonText="הוסף הורה"
+  onAdd={handleAdd}
+  onRemove={handleRemove}
+  items={items}
+  renderItem={(item, index) => <YourContent />}
+/>
 ```
 
-### שלב 3: שמור שינויים (רק כשאתה מוכן!)
-```bash
-# הוסף את כל הקבצים
-git add .
+תכונות:
+- הפרדה ויזואלית בין פריטים
+- מספור אוטומטי
+- כפתור הסרה לכל פריט
 
-# צור commit עם הודעה
-git commit -m "תיאור השינויים"
+### Sidebar
+תפריט צד דינמי:
+- פתיחה/סגירה עם אנימציה
+- שינוי טקסט: "מסיעי סמי ומשה" ← "SMT"
+- קישור לדף הבית בלחיצה על הכותרת
+- תפריט מסד הנתונים עם תת-תפריט
 
-# דחוף ל-GitHub
-git push -u origin main
+---
+
+## 📱 פורמט טלפון
+
+### שימוש
+```typescript
+import { formatPhoneNumber, unformatPhoneNumber } from '@/lib/format-phone'
+
+// פורמט לתצוגה
+const formatted = formatPhoneNumber("0501234567")
+// → "050-123-4567"
+
+// הסרת פורמט לשמירה
+const plain = unformatPhoneNumber("050-123-4567")
+// → "0501234567"
 ```
 
-**חשוב**: הפרויקט **לא ישמור אוטומטית**. שמור שינויים רק כשאתה מוכן!
+### אוטומציה
+- הוספת מקפים בזמן הקלדה
+- מקסימום 12 תווים (כולל מקפים)
+- פורמט: XXX-XXX-XXXX
+
+---
 
 ## 🔐 אבטחה
 
-### קבצים שלא נשמרים ל-Git
-הקבצים הבאים נמצאים ב-`.gitignore` ולא נשמרים ל-GitHub:
-- `.env.local` - משתני סביבה (סודות!)
-- `node_modules/` - תלויות
-- `.next/` - קבצי build
-
 ### משתני סביבה
-**לעולם אל תשתף** את הקבצים הבאים:
+**אל תשתף את הקבצים הבאים:**
 - `.env.local` - מכיל מפתחות API
-- כל קובץ עם סיסמאות או טוקנים
+- כל קובץ עם סיסמאות/טוקנים
 
-## 📊 מסד הנתונים (Supabase)
-
-### חיבור למסד הנתונים
-מסד הנתונים פועל על Supabase בפרויקט **SMT_app**.
-
-### שימוש בקליינט
-```typescript
-// Browser (Client Component)
-import { createClient } from '@/lib/supabase/client'
-const supabase = createClient()
-
-// Server (Server Component/Route Handler)
-import { createClient } from '@/lib/supabase/server'
-const supabase = await createClient()
+### .gitignore
+הקבצים הבאים לא נשמרים ל-Git:
+```
+.env.local
+.env*.local
+node_modules/
+.next/
 ```
 
-### תכנון טבלאות
-התכנון המלא של מסד הנתונים יבוא בשלבים הבאים לפי הצרכים.
+### Row Level Security (RLS)
+- **SELECT**: פתוח לכולם (בינתיים)
+- **INSERT/UPDATE/DELETE**: רק למשתמשים מחוברים
 
-## 🎯 תכנון עתידי
+---
 
-הפרויקט מוכן להתפתחות בשלבים הבאים:
-1. ✅ תשתית בסיסית (הושלם)
-2. 📋 תכנון מודל נתונים
-3. 👥 מערכת ניהול ילדים
-4. 🚗 מערכת ניהול נהגים ורכבים
-5. 🗺️ תכנון מסלולי הסעה
-6. 📊 דוחות וניתוחים
-7. 📱 מעקב בזמן אמת
+## 🔄 Git & GitHub
 
-## 🤝 פיתוח
+### מצב נוכחי
+הפרויקט מחובר ל-GitHub:
+```
+Repository: github.com/barmenahem17/SMT_app
+Branch: main
+Remote: SSH (git@github.com)
+```
 
-### כללי קוד
-- השתמש ב-TypeScript תמיד
-- עקוב אחר עקרונות clean code
-- תעד קוד מורכב
-- בדוק את הקוד לפני commit
+### שמירת שינויים
+**חשוב**: הפרויקט **לא שומר אוטומטית**!
 
-### הוספת קומפוננטות ShadCN
+```bash
+# בדוק סטטוס
+git status
+
+# הוסף קבצים
+git add .
+
+# צור commit
+git commit -m "תיאור השינויים"
+
+# דחוף ל-GitHub
+git push
+```
+
+### כללי Commit
+- commit הגיוני אחרי כל תכונה
+- הודעות ברורות בעברית
+- בדוק שהכל עובד לפני push
+
+---
+
+## 🎓 מדריך מהיר
+
+### הוספת ילד חדש
+1. לך ל-`/dashboard/children`
+2. לחץ "הוסף ילד"
+3. מלא פרטים (שדות עם * חובה)
+4. לחץ "הוסף הורה" אם צריך
+5. שמור
+
+### חיפוש ילד
+1. לך לדף הבית `/dashboard`
+2. הקלד שם בשדה החיפוש
+3. או לחץ על "ילדים" לסינון
+4. ראה תוצאות בטבלה
+
+### הוספת מוסד
+1. לך ל-`/dashboard/institutions`
+2. לחץ "הוסף מוסד"
+3. מלא פרטים
+4. הוסף אנשי קשר אם צריך
+5. שמור
+
+---
+
+## 🎨 התאמה אישית
+
+### צבעים
+ערוך `tailwind.config.ts`:
+```typescript
+colors: {
+  primary: "...",
+  secondary: "..."
+}
+```
+
+### פונטים
+ערוך `app/layout.tsx`:
+```typescript
+import { Heebo } from 'next/font/google'
+const heebo = Heebo({ subsets: ['hebrew'] })
+```
+
+### קומפוננטות ShadCN
+הוסף קומפוננטות:
 ```bash
 npx shadcn-ui@latest add [component-name]
 ```
 
-## 📝 רישיונות
+---
 
-פרויקט פרטי - כל הזכויות שמורות.
+## 🐛 פתרון בעיות
+
+### הסרוור לא עולה
+```bash
+# נקה node_modules
+rm -rf node_modules
+npm install
+
+# נקה .next
+rm -rf .next
+npm run dev
+```
+
+### בעיות עם Supabase
+1. בדוק שהמפתחות ב-`.env.local` נכונים
+2. בדוק ש-RLS מוגדר נכון
+3. בדוק שהמיגרציות רצו
+
+### בעיות RTL
+1. וודא ש-`dir="rtl"` ב-`app/layout.tsx`
+2. וודא ש-`text-right` בקומפוננטות
+3. בדוק את ה-`flex-row-reverse` בתפריטים
 
 ---
 
-**שאלות?** פנה למנהל הפרויקט.
+## 📚 משאבים נוספים
 
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [ShadCN/ui](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+
+---
+
+## 📝 רישיונות
+
+פרויקט פרטי - **מסיעי סמי ומשה**  
+כל הזכויות שמורות © 2025
+
+---
+
+## ✅ מה הושלם עד כה
+
+### Phase 1 - תשתית ועיצוב ✅
+- [x] הקמת פרויקט Next.js + TypeScript
+- [x] התקנת Tailwind CSS + ShadCN/ui
+- [x] תמיכה מלאה ב-RTL
+- [x] חיבור GitHub
+- [x] חיבור Supabase
+- [x] דף כניסה מעוצב
+
+### Phase 2 - מסד נתונים ✅
+- [x] טבלת ילדים + הורים
+- [x] טבלת מוסדות + אנשי קשר
+- [x] טבלת גופים + מפקחים
+- [x] טבלת נהגים
+- [x] טבלת מלווים
+- [x] RLS policies
+- [x] Triggers לעדכון אוטומטי
+
+### Phase 3 - UI/UX ✅
+- [x] Sidebar דינמי
+- [x] דף בית עם חיפוש וסינון
+- [x] דפי ניהול לכל ישות
+- [x] פורמט טלפון אוטומטי
+- [x] קומפוננטות דינמיות
+- [x] תיקוני RTL מלאים
+- [x] הפרדה ויזואלית משופרת
+
+### Phase 4 - הבא בתור 📋
+- [ ] קישורים בין ישויות (ילד-מוסד, ילד-נהג וכו')
+- [ ] מערכת הסעות
+- [ ] לוח שנה ותזמון
+- [ ] דוחות וניתוחים
+- [ ] ייצוא נתונים
+- [ ] מעקב בזמן אמת
+
+---
+
+**מוכן לפיתוח!** 🚀
+
+לשאלות: צור קשר עם מנהל הפרויקט
