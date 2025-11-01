@@ -53,14 +53,16 @@ export function Sidebar() {
 
       {/* כותרת */}
       <div className="p-6 border-b border-slate-200">
-        <h1
-          className={cn(
-            "font-bold text-primary transition-all duration-300",
-            isOpen ? "text-xl text-center" : "text-sm text-center"
-          )}
-        >
-          {isOpen ? "מסיעי סמי ומשה" : "SMS"}
-        </h1>
+        <Link href="/dashboard">
+          <h1
+            className={cn(
+              "font-bold text-primary transition-all duration-300 hover:opacity-80 cursor-pointer",
+              isOpen ? "text-xl text-center" : "text-sm text-center"
+            )}
+          >
+            {isOpen ? "מסיעי סמי ומשה" : "SMT"}
+          </h1>
+        </Link>
       </div>
 
       {/* תפריט */}
