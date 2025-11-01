@@ -1,120 +1,66 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <header className="border-b bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary">SMT App</h1>
-          <nav className="flex gap-4">
-            <Button variant="ghost">דף הבית</Button>
-            <Button variant="ghost">אודות</Button>
-            <Button variant="default">התחבר</Button>
-          </nav>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-l from-primary to-slate-700 bg-clip-text text-transparent">
-            ברוכים הבאים למערכת ניהול ההסעות
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            מערכת מתקדמת לניהול הסעות ילדים עם צרכים מיוחדים
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button size="lg">התחל עכשיו</Button>
-            <Button size="lg" variant="outline">למד עוד</Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+      <Card className="max-w-2xl w-full">
+        <CardHeader className="text-center space-y-4">
+          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+            <svg
+              className="w-10 h-10 text-primary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
           </div>
-        </div>
-      </section>
+          <CardTitle className="text-4xl font-bold">
+            מערכת ניהול הסעות
+          </CardTitle>
+          <p className="text-lg text-muted-foreground">
+            מסיעי סמי ומשה
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <p className="text-center text-muted-foreground">
+            מערכת לניהול הסעות ילדים עם צרכים מיוחדים
+          </p>
+          
+          <div className="flex flex-col gap-3">
+            <Link href="/dashboard/children" className="w-full">
+              <Button size="lg" className="w-full">
+                כניסה למסד הנתונים
+              </Button>
+            </Link>
+          </div>
 
-      {/* Features Section */}
-      <section className="container mx-auto px-4 py-16">
-        <h3 className="text-3xl font-bold text-center mb-12">מה כלול במערכת?</h3>
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle>📋 ניהול ילדים</CardTitle>
-              <CardDescription>
-                ניהול מקיף של פרטי הילדים, צרכים מיוחדים ופרטי קשר
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                שמור את כל המידע החשוב במקום אחד ונגיש
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>🚗 ניהול נהגים ורכבים</CardTitle>
-              <CardDescription>
-                מעקב אחר נהגים, רכבים וזמינות בזמן אמת
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                תכנון חכם של משאבים לאופטימיזציה מקסימלית
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>🗺️ תכנון מסלולים</CardTitle>
-              <CardDescription>
-                תכנון מסלולי הסעה יעילים וחכמים
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                חיסכון בזמן ובעלויות עם תכנון אופטימלי
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Status Section */}
-      <section className="container mx-auto px-4 py-16">
-        <Card className="max-w-3xl mx-auto bg-primary/5 border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-center">סטטוס המערכת</CardTitle>
-            <CardDescription className="text-center">
-              המערכת מוכנה ופועלת
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-4 text-center">
+          <div className="pt-6 border-t">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-3xl font-bold text-primary mb-2">✅</div>
-                <div className="text-sm font-medium">תשתית מוכנה</div>
+                <div className="text-2xl font-bold text-primary">5</div>
+                <div className="text-xs text-muted-foreground">קטגוריות</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary mb-2">🎨</div>
-                <div className="text-sm font-medium">עיצוב RTL</div>
+                <div className="text-2xl font-bold text-primary">✓</div>
+                <div className="text-xs text-muted-foreground">מוכן לשימוש</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary mb-2">🗄️</div>
-                <div className="text-sm font-medium">Supabase מחובר</div>
+                <div className="text-2xl font-bold text-primary">RTL</div>
+                <div className="text-xs text-muted-foreground">תמיכה מלאה</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t bg-white mt-16">
-        <div className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-          <p>© 2025 SMT App - מערכת ניהול הסעות. כל הזכויות שמורות.</p>
-        </div>
-      </footer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
+  )
 }
 
