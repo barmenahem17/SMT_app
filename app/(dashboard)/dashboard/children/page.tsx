@@ -37,6 +37,8 @@ interface Child {
   age: number
   phone?: string
   home_address: string
+  city?: string
+  disability?: string
   notes?: string
   parents: Parent[]
   created_at: string
@@ -61,6 +63,8 @@ export default function ChildrenPage() {
     age: 5,
     phone: "",
     home_address: "",
+    city: "",
+    disability: "",
     notes: "",
     parents: [] as Parent[],
   })
@@ -96,6 +100,8 @@ export default function ChildrenPage() {
       age: 5,
       phone: "",
       home_address: "",
+      city: "",
+      disability: "",
       notes: "",
       parents: [],
     })
@@ -112,6 +118,8 @@ export default function ChildrenPage() {
       age: child.age,
       phone: child.phone || "",
       home_address: child.home_address,
+      city: child.city || "",
+      disability: child.disability || "",
       notes: child.notes || "",
       parents: child.parents || [],
     })
@@ -129,6 +137,8 @@ export default function ChildrenPage() {
       age: formData.age,
       phone: unformatPhoneNumber(formData.phone) || null,
       home_address: formData.home_address,
+      city: formData.city || null,
+      disability: formData.disability || null,
       notes: formData.notes || null,
       parents: formData.parents,
     }
@@ -242,7 +252,13 @@ export default function ChildrenPage() {
                   </div>
                   <div className="text-sm">
                     <strong>כתובת:</strong> {child.home_address}
+                    {child.city && `, ${child.city}`}
                   </div>
+                  {child.disability && (
+                    <div className="text-sm">
+                      <strong>מוגבלות:</strong> {child.disability}
+                    </div>
+                  )}
                   {child.notes && (
                     <div className="text-sm">
                       <strong>הערות:</strong> {child.notes}
@@ -369,6 +385,20 @@ export default function ChildrenPage() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="disability">מוגבלות</Label>
+                <Input
+                  id="disability"
+                  value={formData.disability}
+                  onChange={(e) =>
+                    setFormData({ ...formData, disability: e.target.value })
+                  }
+                  placeholder="למשל: אוטיזם, עיכוב התפתחותי..."
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
                 <Label htmlFor="home_address">
                   כתובת מגורים <span className="text-destructive">*</span>
                 </Label>
@@ -378,6 +408,22 @@ export default function ChildrenPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, home_address: e.target.value })
                   }
+                  placeholder="רחוב ומספר בית"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="city">
+                  עיר <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
+                  placeholder="למשל: תל אביב"
                   required
                 />
               </div>

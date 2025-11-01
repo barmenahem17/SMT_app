@@ -35,6 +35,7 @@ interface Institution {
   type_other?: string
   letter_code?: string
   address: string
+  city?: string
   institution_subtype: string
   subtype_other?: string
   waze_link?: string
@@ -61,6 +62,7 @@ export default function InstitutionsPage() {
     type_other: "",
     letter_code: "",
     address: "",
+    city: "",
     institution_subtype: "עיכוב שפתי",
     subtype_other: "",
     waze_link: "",
@@ -98,6 +100,7 @@ export default function InstitutionsPage() {
       type_other: "",
       letter_code: "",
       address: "",
+      city: "",
       institution_subtype: "עיכוב שפתי",
       subtype_other: "",
       waze_link: "",
@@ -116,6 +119,7 @@ export default function InstitutionsPage() {
       type_other: institution.type_other || "",
       letter_code: institution.letter_code || "",
       address: institution.address,
+      city: institution.city || "",
       institution_subtype: institution.institution_subtype,
       subtype_other: institution.subtype_other || "",
       waze_link: institution.waze_link || "",
@@ -135,6 +139,7 @@ export default function InstitutionsPage() {
       type_other: formData.type === "אחר" ? formData.type_other : null,
       letter_code: formData.letter_code || null,
       address: formData.address,
+      city: formData.city || null,
       institution_subtype: formData.institution_subtype,
       subtype_other:
         formData.institution_subtype === "אחר" ? formData.subtype_other : null,
@@ -253,6 +258,7 @@ export default function InstitutionsPage() {
                   </div>
                   <div className="text-sm">
                     <strong>כתובת:</strong> {institution.address}
+                    {institution.city && `, ${institution.city}`}
                   </div>
                   <div className="text-sm">
                     <strong>סוג:</strong>{" "}
@@ -378,7 +384,7 @@ export default function InstitutionsPage() {
               </div>
             )}
 
-            <div className="grid gap-4 grid-cols-[2fr_180px]">
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="address">
                   כתובת <span className="text-destructive">*</span>
@@ -389,10 +395,28 @@ export default function InstitutionsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                   }
+                  placeholder="רחוב ומספר"
                   required
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="city">
+                  עיר <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
+                  placeholder="למשל: תל אביב"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="institution_subtype">
                   סוג מוסד <span className="text-destructive">*</span>
