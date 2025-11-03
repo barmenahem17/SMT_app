@@ -58,9 +58,10 @@ export function Sidebar() {
         <Link href="/dashboard">
           <h1
             className={cn(
-              "font-bold text-primary transition-all duration-300 hover:opacity-80 cursor-pointer",
+              "font-bold transition-all duration-300 hover:opacity-80 cursor-pointer text-slate-800",
               isOpen ? "text-xl text-center" : "text-sm text-center"
             )}
+            style={{ fontFamily: 'var(--font-heebo)' }}
           >
             {isOpen ? "מסיעי סמי ומשה" : "SMT"}
           </h1>
