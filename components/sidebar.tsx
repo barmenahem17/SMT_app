@@ -71,27 +71,44 @@ export function Sidebar() {
       <nav className="p-4 space-y-2">
         {/* כפתור מסד הנתונים */}
         <div>
-          <button
-            onClick={() => setIsDatabaseOpen(!isDatabaseOpen)}
-            className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-              "hover:bg-slate-100 text-slate-700 font-medium",
-              isDatabaseOpen && "bg-slate-50"
-            )}
-          >
-            <Database className="h-5 w-5 shrink-0" />
+          <div className={cn(
+            "flex items-center justify-between w-full rounded-lg transition-all overflow-hidden",
+            pathname === "/dashboard/database" 
+              ? "bg-primary text-primary-foreground" 
+              : "hover:bg-slate-100"
+          )}>
+            {/* החלק הראשי - קישור */}
+            <Link
+              href="/dashboard/database"
+              className="flex-1 flex items-center gap-3 px-4 py-3"
+            >
+              <Database className="h-5 w-5 shrink-0" />
+              {isOpen && <span className="font-medium">מסד הנתונים</span>}
+            </Link>
+            
+            {/* החץ - כפתור נפרד עם גבול */}
             {isOpen && (
-              <>
-                <span className="flex-1 text-right">מסד הנתונים</span>
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsDatabaseOpen(!isDatabaseOpen)
+                }}
+                className={cn(
+                  "px-3 py-3 border-r-2 transition-all",
+                  pathname === "/dashboard/database"
+                    ? "border-primary-foreground/40 hover:bg-primary/80"
+                    : "border-slate-300 hover:bg-slate-200"
+                )}
+              >
                 <ChevronLeft
                   className={cn(
                     "h-4 w-4 transition-transform",
                     isDatabaseOpen && "rotate-90"
                   )}
                 />
-              </>
+              </button>
             )}
-          </button>
+          </div>
 
           {/* תת-תפריט */}
           {isDatabaseOpen && (
