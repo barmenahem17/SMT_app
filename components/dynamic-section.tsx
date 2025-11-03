@@ -12,6 +12,9 @@ interface DynamicSectionProps {
   onRemove?: (index: number) => void
   items: any[]
   renderItem: (item: any, index: number) => React.ReactNode
+  showNumbering?: boolean
+  centerAddButton?: boolean
+  hideAddButton?: boolean
 }
 
 export function DynamicSection({
@@ -21,30 +24,17 @@ export function DynamicSection({
   onRemove,
   items,
   renderItem,
+  showNumbering = true,
+  centerAddButton = false,
+  hideAddButton = false,
 }: DynamicSectionProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      {title && (
         <h3 className="text-lg font-semibold">{title}</h3>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onAdd}
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          {addButtonText}
-        </Button>
-      </div>
+      )}
 
       <div className="space-y-4">
-        {items.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-8 border-2 border-dashed rounded-lg">
-            לחץ על "{addButtonText}" כדי להוסיף.
-          </p>
-        )}
-
         {items.map((item, index) => (
           <Card key={index} className="p-5 relative bg-slate-50 border-2">
             {onRemove && (
@@ -59,13 +49,31 @@ export function DynamicSection({
               </Button>
             )}
             <div className="pr-8">
-              <div className="text-xs text-muted-foreground mb-3 font-medium">
-                #{index + 1}
-              </div>
+              {showNumbering && (
+                <div className="text-xs text-muted-foreground mb-3 font-medium">
+                  #{index + 1}
+                </div>
+              )}
               {renderItem(item, index)}
             </div>
           </Card>
         ))}
+
+        {/* כפתור הוסף נוסף - מיושר לפי centerAddButton */}
+        {!hideAddButton && (
+          <div className={`flex pt-2 ${centerAddButton ? 'justify-center' : 'justify-end'}`}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onAdd}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              {addButtonText}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

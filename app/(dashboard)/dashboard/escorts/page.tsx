@@ -161,7 +161,7 @@ export default function EscortsPage() {
                   <h3 className="text-lg font-semibold">
                     {escort.first_name} {escort.last_name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{escort.phone}</p>
+                  <p className="text-sm text-muted-foreground">{escort.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button

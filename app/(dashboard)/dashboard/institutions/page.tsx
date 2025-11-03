@@ -274,10 +274,15 @@ export default function InstitutionsPage() {
                   {institution.contacts && institution.contacts.length > 0 && (
                     <div className="pt-2 border-t">
                       <strong className="text-sm">אנשי קשר:</strong>
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-2 space-y-2">
                         {institution.contacts.map((contact, i) => (
-                          <div key={i} className="text-sm text-muted-foreground">
-                            {contact.first_name} {contact.last_name} ({contact.role === "אחר" && contact.role_other ? contact.role_other : contact.role}) - {contact.phone}
+                          <div key={i} className="text-sm bg-slate-50 p-2 rounded">
+                            <div className="text-muted-foreground">
+                              <strong>{contact.role === "אחר" && contact.role_other ? contact.role_other : contact.role}:</strong> {contact.first_name} {contact.last_name}
+                            </div>
+                            <div className="text-muted-foreground mt-1">
+                              <strong>טלפון:</strong> {contact.phone}
+                            </div>
                           </div>
                         ))}
                       </div>

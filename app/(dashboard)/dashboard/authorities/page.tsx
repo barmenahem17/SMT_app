@@ -22,8 +22,9 @@ import { unformatPhoneNumber } from "@/lib/format-phone"
 interface Supervisor {
   first_name: string
   last_name: string
-  area: string
+  role: string
   email: string
+  phone?: string
 }
 
 interface Authority {
@@ -38,8 +39,9 @@ interface Authority {
 const emptySupervisor: Supervisor = {
   first_name: "",
   last_name: "",
-  area: "",
+  role: "",
   email: "",
+  phone: "",
 }
 
 export default function AuthoritiesPage() {
@@ -197,20 +199,21 @@ export default function AuthoritiesPage() {
                 <div className="space-y-3 flex-1">
                   <div>
                     <h3 className="text-xl font-semibold">{authority.name}</h3>
-                    <div className="flex gap-4 text-sm text-muted-foreground mt-1">
-                      <span>טלפון: {authority.main_phone}</span>
-                      <span>אימייל: {authority.email}</span>
+                    <div className="text-sm text-muted-foreground mt-2 space-y-1">
+                      <div><strong>טלפון:</strong> {authority.main_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>
+                      <div><strong>אימייל:</strong> {authority.email}</div>
                     </div>
                   </div>
                   {authority.supervisors && authority.supervisors.length > 0 && (
                     <div className="pt-2 border-t">
                       <strong className="text-sm">מפקחים:</strong>
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-2 space-y-2">
                         {authority.supervisors.map((supervisor, i) => (
-                          <div key={i} className="text-sm text-muted-foreground">
-                            {supervisor.first_name} {supervisor.last_name}
-                            {supervisor.area && ` - ${supervisor.area}`}
-                            {supervisor.email && ` - ${supervisor.email}`}
+                          <div key={i} className="text-sm bg-slate-50 p-2 rounded">
+                            <div><strong>שם:</strong> {supervisor.first_name} {supervisor.last_name}</div>
+                            {supervisor.role && <div className="text-muted-foreground mt-1"><strong>תפקיד:</strong> {supervisor.role}</div>}
+                            {supervisor.email && <div className="text-muted-foreground mt-1"><strong>אימייל:</strong> {supervisor.email}</div>}
+                            {supervisor.phone && <div className="text-muted-foreground mt-1"><strong>טלפון:</strong> {supervisor.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>}
                           </div>
                         ))}
                       </div>
@@ -303,6 +306,7 @@ export default function AuthoritiesPage() {
                   onAdd={addSupervisor}
                   onRemove={removeSupervisor}
                   items={formData.supervisors}
+                  centerAddButton={true}
                   renderItem={(supervisor, index) => (
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -324,13 +328,13 @@ export default function AuthoritiesPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>איזור</Label>
+                          <Label>תפקיד</Label>
                           <Input
-                            value={supervisor.area}
+                            value={supervisor.role}
                             onChange={(e) =>
-                              updateSupervisor(index, "area", e.target.value)
+                              updateSupervisor(index, "role", e.target.value)
                             }
-                            placeholder="למשל: צפון, דרום..."
+                            placeholder="למשל: מפקח ראשי, מתאם..."
                           />
                         </div>
                         <div className="space-y-2">
@@ -341,6 +345,16 @@ export default function AuthoritiesPage() {
                             onChange={(e) =>
                               updateSupervisor(index, "email", e.target.value)
                             }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>טלפון</Label>
+                          <PhoneInput
+                            value={supervisor.phone || ""}
+                            onChange={(value) =>
+                              updateSupervisor(index, "phone", value)
+                            }
+                            placeholder="050-123-4567"
                           />
                         </div>
                       </div>

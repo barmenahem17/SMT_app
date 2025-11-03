@@ -171,7 +171,7 @@ export default function DriversPage() {
                   <h3 className="text-lg font-semibold">
                     {driver.first_name} {driver.last_name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{driver.phone}</p>
+                  <p className="text-sm text-muted-foreground">{driver.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -195,7 +195,7 @@ export default function DriversPage() {
                   <strong>רכב:</strong> {driver.car_type}
                 </div>
                 <div>
-                  <strong>מספר:</strong> {driver.car_number}
+                  <strong>מספר:</strong> {driver.car_number.replace(/(\d{2,3})(\d{3})(\d{2,3})/, '$1-$2-$3')}
                 </div>
                 {driver.notes && (
                   <div className="pt-2 border-t">
