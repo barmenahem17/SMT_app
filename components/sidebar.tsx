@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronRight, ChevronLeft, Database, Users, Building2, Briefcase, Car, UserCheck } from "lucide-react"
+import { ChevronRight, ChevronLeft, Database, Users, Building2, Briefcase, Car, UserCheck, Route } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -138,6 +138,21 @@ export function Sidebar() {
             </div>
           )}
         </div>
+
+        {/* כפתור קווים - נפרד */}
+        <Link
+          href="/dashboard/routes"
+          className={cn(
+            "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+            "hover:bg-slate-100",
+            pathname === "/dashboard/routes"
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "text-slate-600"
+          )}
+        >
+          <Route className="h-5 w-5 shrink-0" />
+          {isOpen && <span className="font-medium">קווים</span>}
+        </Link>
       </nav>
     </div>
   )
