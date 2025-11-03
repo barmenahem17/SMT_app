@@ -496,7 +496,7 @@ export default function ChildrenPage() {
                   </div>
                   
                   {isExpanded && (
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-4 pt-2">
                       {/* הורים */}
                       {child.parents && child.parents.length > 0 && (
                         <div className="pb-3 border-b border-slate-200">

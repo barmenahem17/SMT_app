@@ -277,7 +277,7 @@ export default function AuthoritiesPage() {
 
                   {/* פרטים מורחבים */}
                   {isExpanded && (
-                    <div className="space-y-3 pt-3">
+                    <div className="space-y-3 pt-2">
                       {authority.supervisors && authority.supervisors.length > 0 && (
                         <div>
                           <strong className="text-sm">מפקחים:</strong>

@@ -332,7 +332,7 @@ export default function InstitutionsPage() {
 
                   {/* פרטים מורחבים */}
                   {isExpanded && (
-                    <div className="space-y-3 pt-3">
+                    <div className="space-y-3 pt-2">
                       {institution.waze_link && (
                         <div>
                           <a
