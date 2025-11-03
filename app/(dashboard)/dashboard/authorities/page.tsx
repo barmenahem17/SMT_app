@@ -82,9 +82,9 @@ export default function AuthoritiesPage() {
       name: "",
       main_phone: "",
       email: "",
-      supervisors: [],
+      supervisors: [{ ...emptySupervisor }], // שדה אחד פתוח באופן אוטומטי
     })
-    setShowSupervisors(false)
+    setShowSupervisors(true) // פתוח באופן אוטומטי
     setDialogOpen(true)
   }
 
@@ -150,18 +150,10 @@ export default function AuthoritiesPage() {
   }
 
   function addSupervisor() {
-    if (!showSupervisors) {
-      setShowSupervisors(true)
-      setFormData({
-        ...formData,
-        supervisors: [{ ...emptySupervisor }],
-      })
-    } else {
-      setFormData({
-        ...formData,
-        supervisors: [...formData.supervisors, { ...emptySupervisor }],
-      })
-    }
+    setFormData({
+      ...formData,
+      supervisors: [...formData.supervisors, { ...emptySupervisor }],
+    })
   }
 
   function removeSupervisor(index: number) {
@@ -303,30 +295,15 @@ export default function AuthoritiesPage() {
 
             <div className="border-t pt-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">מפקחים</h3>
-                  {!showSupervisors && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addSupervisor}
-                      className="gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      הוסף מפקח
-                    </Button>
-                  )}
-                </div>
+                <h3 className="text-lg font-semibold mb-4">מפקחים</h3>
 
-                {showSupervisors && (
-                  <DynamicSection
-                    title=""
-                    addButtonText="הוסף מפקח נוסף"
-                    onAdd={addSupervisor}
-                    onRemove={removeSupervisor}
-                    items={formData.supervisors}
-                    renderItem={(supervisor, index) => (
+                <DynamicSection
+                  title=""
+                  addButtonText="הוסף מפקח נוסף"
+                  onAdd={addSupervisor}
+                  onRemove={removeSupervisor}
+                  items={formData.supervisors}
+                  renderItem={(supervisor, index) => (
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>שם פרטי</Label>
@@ -369,7 +346,6 @@ export default function AuthoritiesPage() {
                       </div>
                     )}
                   />
-                )}
               </div>
             </div>
 

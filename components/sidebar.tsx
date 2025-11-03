@@ -22,6 +22,8 @@ export function Sidebar() {
 
   useEffect(() => {
     localStorage.setItem("sidebar-open", isOpen.toString())
+    // שידור אירוע כדי שה-layout יידע על השינוי
+    window.dispatchEvent(new Event("sidebar-toggle"))
   }, [isOpen])
 
   const menuItems = [

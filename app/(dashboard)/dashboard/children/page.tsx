@@ -103,9 +103,9 @@ export default function ChildrenPage() {
       city: "",
       disability: "",
       notes: "",
-      parents: [],
+      parents: [{ ...emptyParent }], // שדה אחד פתוח באופן אוטומטי
     })
-    setShowParents(false)
+    setShowParents(true) // פתוח באופן אוטומטי
     setDialogOpen(true)
   }
 
@@ -185,18 +185,10 @@ export default function ChildrenPage() {
   }
 
   function addParent() {
-    if (!showParents) {
-      setShowParents(true)
-      setFormData({
-        ...formData,
-        parents: [{ ...emptyParent }],
-      })
-    } else {
-      setFormData({
-        ...formData,
-        parents: [...formData.parents, { ...emptyParent }],
-      })
-    }
+    setFormData({
+      ...formData,
+      parents: [...formData.parents, { ...emptyParent }],
+    })
   }
 
   function removeParent(index: number) {
@@ -457,30 +449,15 @@ export default function ChildrenPage() {
 
             <div className="border-t pt-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">הורים</h3>
-                  {!showParents && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addParent}
-                      className="gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      הוסף הורה
-                    </Button>
-                  )}
-                </div>
+                <h3 className="text-lg font-semibold mb-4">הורים</h3>
 
-                {showParents && (
-                  <DynamicSection
-                    title=""
-                    addButtonText="הוסף הורה נוסף"
-                    onAdd={addParent}
-                    onRemove={removeParent}
-                    items={formData.parents}
-                    renderItem={(parent, index) => (
+                <DynamicSection
+                  title=""
+                  addButtonText="הוסף הורה נוסף"
+                  onAdd={addParent}
+                  onRemove={removeParent}
+                  items={formData.parents}
+                  renderItem={(parent, index) => (
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>שם פרטי</Label>
@@ -543,7 +520,6 @@ export default function ChildrenPage() {
                       </div>
                     )}
                   />
-                )}
               </div>
             </div>
 

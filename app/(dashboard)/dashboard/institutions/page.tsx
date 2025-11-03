@@ -105,9 +105,9 @@ export default function InstitutionsPage() {
       subtype_other: "",
       waze_link: "",
       pickup_image_url: "",
-      contacts: [],
+      contacts: [{ ...emptyContact }], // שדה אחד פתוח באופן אוטומטי
     })
-    setShowContacts(false)
+    setShowContacts(true) // פתוח באופן אוטומטי
     setDialogOpen(true)
   }
 
@@ -190,18 +190,10 @@ export default function InstitutionsPage() {
   }
 
   function addContact() {
-    if (!showContacts) {
-      setShowContacts(true)
-      setFormData({
-        ...formData,
-        contacts: [{ ...emptyContact }],
-      })
-    } else {
-      setFormData({
-        ...formData,
-        contacts: [...formData.contacts, { ...emptyContact }],
-      })
-    }
+    setFormData({
+      ...formData,
+      contacts: [...formData.contacts, { ...emptyContact }],
+    })
   }
 
   function removeContact(index: number) {
@@ -482,30 +474,15 @@ export default function InstitutionsPage() {
 
             <div className="border-t pt-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">אנשי קשר</h3>
-                  {!showContacts && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addContact}
-                      className="gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      הוסף איש קשר
-                    </Button>
-                  )}
-                </div>
+                <h3 className="text-lg font-semibold mb-4">אנשי קשר</h3>
 
-                {showContacts && (
-                  <DynamicSection
-                    title=""
-                    addButtonText="הוסף איש קשר נוסף"
-                    onAdd={addContact}
-                    onRemove={removeContact}
-                    items={formData.contacts}
-                    renderItem={(contact, index) => (
+                <DynamicSection
+                  title=""
+                  addButtonText="הוסף איש קשר נוסף"
+                  onAdd={addContact}
+                  onRemove={removeContact}
+                  items={formData.contacts}
+                  renderItem={(contact, index) => (
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>שם פרטי</Label>
@@ -568,7 +545,6 @@ export default function InstitutionsPage() {
                       </div>
                     )}
                   />
-                )}
               </div>
             </div>
 
