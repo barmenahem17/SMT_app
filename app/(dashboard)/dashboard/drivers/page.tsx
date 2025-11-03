@@ -145,14 +145,14 @@ export default function DriversPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="relative flex items-center justify-center">
+        <div className="text-center">
           <h1 className="text-3xl font-bold">ניהול נהגים</h1>
           <p className="text-muted-foreground">ניהול מלא של נהגי ההסעות</p>
         </div>
-        <Button onClick={openAddDialog} className="gap-2">
-          <Plus className="h-4 w-4" />
+        <Button onClick={openAddDialog} className="gap-2 absolute left-0">
           הוסף נהג חדש
+          <Plus className="h-4 w-4" />
         </Button>
       </div>
 

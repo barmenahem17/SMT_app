@@ -213,14 +213,14 @@ export default function InstitutionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="relative flex items-center justify-center">
+        <div className="text-center">
           <h1 className="text-3xl font-bold">ניהול מוסדות</h1>
           <p className="text-muted-foreground">ניהול בתי ספר, גנים ומוסדות חינוך</p>
         </div>
-        <Button onClick={openAddDialog} className="gap-2">
-          <Plus className="h-4 w-4" />
+        <Button onClick={openAddDialog} className="gap-2 absolute left-0">
           הוסף מוסד חדש
+          <Plus className="h-4 w-4" />
         </Button>
       </div>
 
