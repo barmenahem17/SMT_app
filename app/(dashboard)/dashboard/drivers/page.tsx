@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Card } from "@/components/ui/card"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Search } from "lucide-react"
 import { unformatPhoneNumber } from "@/lib/format-phone"
 
 interface Driver {
@@ -35,6 +35,7 @@ export default function DriversPage() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -155,6 +156,22 @@ export default function DriversPage() {
         </Button>
       </div>
 
+      {/* שורת חיפוש */}
+      {!loading && drivers.length > 0 && (
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="חפש לפי שם פרטי או שם משפחה..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-10"
+            />
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-12">טוען...</div>
       ) : drivers.length === 0 ? (
@@ -164,7 +181,16 @@ export default function DriversPage() {
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {drivers.map((driver) => (
+          {drivers
+            .filter((driver) => {
+              if (!searchQuery.trim()) return true
+              const query = searchQuery.toLowerCase()
+              return (
+                driver.first_name.toLowerCase().includes(query) ||
+                driver.last_name.toLowerCase().includes(query)
+              )
+            })
+            .map((driver) => (
             <Card key={driver.id} className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">

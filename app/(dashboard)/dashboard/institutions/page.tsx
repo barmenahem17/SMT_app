@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Card } from "@/components/ui/card"
 import { DynamicSection } from "@/components/dynamic-section"
-import { Plus, Pencil, Trash2, ExternalLink } from "lucide-react"
+import { Plus, Pencil, Trash2, ExternalLink, ChevronDown, ChevronUp, Search } from "lucide-react"
 import { unformatPhoneNumber } from "@/lib/format-phone"
 
 interface Contact {
@@ -56,6 +56,8 @@ export default function InstitutionsPage() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingInstitution, setEditingInstitution] = useState<Institution | null>(null)
+  const [expandedInstitutionId, setExpandedInstitutionId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     type: "בית ספר",
@@ -222,6 +224,22 @@ export default function InstitutionsPage() {
         </Button>
       </div>
 
+      {/* שורת חיפוש */}
+      {!loading && institutions.length > 0 && (
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="חפש לפי שם המוסד..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-10"
+            />
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-12">טוען...</div>
       ) : institutions.length === 0 ? (
@@ -231,83 +249,125 @@ export default function InstitutionsPage() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {institutions.map((institution) => (
-            <Card key={institution.id} className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-3 flex-1">
-                  <div>
-                    <h3 className="text-xl font-semibold">{institution.name}</h3>
-                    <div className="flex gap-4 text-sm text-muted-foreground mt-1">
-                      <span>
-                        {institution.type === "אחר" && institution.type_other
-                          ? institution.type_other
-                          : institution.type}
-                      </span>
-                      {institution.letter_code && (
-                        <span>אות: {institution.letter_code}</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-sm">
-                    <strong>כתובת:</strong> {institution.address}
-                    {institution.city && `, ${institution.city}`}
-                  </div>
-                  <div className="text-sm">
-                    <strong>סוג:</strong>{" "}
-                    {institution.institution_subtype === "אחר" &&
-                    institution.subtype_other
-                      ? institution.subtype_other
-                      : institution.institution_subtype}
-                  </div>
-                  {institution.waze_link && (
-                    <div>
-                      <a
-                        href={institution.waze_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary hover:underline inline-flex items-center gap-1"
-                      >
-                        פתח ב-Waze <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  )}
-                  {institution.contacts && institution.contacts.length > 0 && (
-                    <div className="pt-2 border-t">
-                      <strong className="text-sm">אנשי קשר:</strong>
-                      <div className="mt-2 space-y-2">
-                        {institution.contacts.map((contact, i) => (
-                          <div key={i} className="text-sm bg-slate-50 p-2 rounded">
-                            <div className="text-muted-foreground">
-                              <strong>{contact.role === "אחר" && contact.role_other ? contact.role_other : contact.role}:</strong> {contact.first_name} {contact.last_name}
-                            </div>
-                            <div className="text-muted-foreground mt-1">
-                              <strong>טלפון:</strong> {contact.phone}
-                            </div>
-                          </div>
-                        ))}
+          {institutions
+            .filter((institution) => {
+              if (!searchQuery.trim()) return true
+              const query = searchQuery.toLowerCase()
+              return institution.name.toLowerCase().includes(query)
+            })
+            .map((institution) => {
+            const isExpanded = expandedInstitutionId === institution.id
+            return (
+              <Card key={institution.id} className="p-6">
+                <div className="space-y-3">
+                  {/* כרטיס בסיסי */}
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-2 flex-1">
+                      <div>
+                        <h3 className="text-xl font-semibold">{institution.name}</h3>
+                        <div className="flex gap-4 text-sm text-muted-foreground mt-1">
+                          <span>
+                            {institution.type === "אחר" && institution.type_other
+                              ? institution.type_other
+                              : institution.type}
+                          </span>
+                          {institution.letter_code && (
+                            <span>אות: {institution.letter_code}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-sm">
+                        <strong>כתובת:</strong> {institution.address}
+                        {institution.city && `, ${institution.city}`}
+                      </div>
+                      <div className="text-sm">
+                        <strong>סוג:</strong>{" "}
+                        {institution.institution_subtype === "אחר" &&
+                        institution.subtype_other
+                          ? institution.subtype_other
+                          : institution.institution_subtype}
                       </div>
                     </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openEditDialog(institution)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDelete(institution.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* כפתור הרחבה */}
+                  <div className="flex justify-center pt-2 border-t border-slate-200">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setExpandedInstitutionId(isExpanded ? null : institution.id)}
+                      className="text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <div className="flex items-center gap-1">
+                        {isExpanded ? (
+                          <>
+                            <span>הסתר פרטים</span>
+                            <ChevronUp className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        ) : (
+                          <>
+                            <span>הרחב פרטים</span>
+                            <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        )}
+                      </div>
+                    </Button>
+                  </div>
+
+                  {/* פרטים מורחבים */}
+                  {isExpanded && (
+                    <div className="space-y-3 pt-3">
+                      {institution.waze_link && (
+                        <div>
+                          <a
+                            href={institution.waze_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                          >
+                            פתח ב-Waze <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </div>
+                      )}
+                      {institution.contacts && institution.contacts.length > 0 && (
+                        <div className={institution.waze_link ? "pt-2 border-t" : ""}>
+                          <strong className="text-sm">אנשי קשר:</strong>
+                          <div className="mt-2 space-y-2">
+                            {institution.contacts.map((contact, i) => (
+                              <div key={i} className="text-sm bg-slate-50 p-2 rounded">
+                                <div className="text-muted-foreground">
+                                  <strong>{contact.role === "אחר" && contact.role_other ? contact.role_other : contact.role}:</strong> {contact.first_name} {contact.last_name}
+                                </div>
+                                <div className="text-muted-foreground mt-1">
+                                  <strong>טלפון:</strong> {contact.phone}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => openEditDialog(institution)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(institution.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            )
+          })}
         </div>
       )}
 
@@ -487,6 +547,7 @@ export default function InstitutionsPage() {
                   onAdd={addContact}
                   onRemove={removeContact}
                   items={formData.contacts}
+                  centerAddButton={true}
                   renderItem={(contact, index) => (
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">

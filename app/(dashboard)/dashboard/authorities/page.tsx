@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Card } from "@/components/ui/card"
 import { DynamicSection } from "@/components/dynamic-section"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, ChevronDown, ChevronUp, Search } from "lucide-react"
 import { unformatPhoneNumber } from "@/lib/format-phone"
 
 interface Supervisor {
@@ -49,6 +49,8 @@ export default function AuthoritiesPage() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingAuthority, setEditingAuthority] = useState<Authority | null>(null)
+  const [expandedAuthorityId, setExpandedAuthorityId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     main_phone: "",
@@ -184,6 +186,22 @@ export default function AuthoritiesPage() {
         </Button>
       </div>
 
+      {/* שורת חיפוש */}
+      {!loading && authorities.length > 0 && (
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="חפש לפי שם הגוף..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-10"
+            />
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-12">טוען...</div>
       ) : authorities.length === 0 ? (
@@ -193,52 +211,94 @@ export default function AuthoritiesPage() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {authorities.map((authority) => (
-            <Card key={authority.id} className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-3 flex-1">
-                  <div>
-                    <h3 className="text-xl font-semibold">{authority.name}</h3>
-                    <div className="text-sm text-muted-foreground mt-2 space-y-1">
-                      <div><strong>טלפון:</strong> {authority.main_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>
-                      <div><strong>אימייל:</strong> {authority.email}</div>
+          {authorities
+            .filter((authority) => {
+              if (!searchQuery.trim()) return true
+              const query = searchQuery.toLowerCase()
+              return authority.name.toLowerCase().includes(query)
+            })
+            .map((authority) => {
+            const isExpanded = expandedAuthorityId === authority.id
+            return (
+              <Card key={authority.id} className="p-6">
+                <div className="space-y-3">
+                  {/* כרטיס בסיסי */}
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-2 flex-1">
+                      <div>
+                        <h3 className="text-xl font-semibold">{authority.name}</h3>
+                        <div className="text-sm text-muted-foreground mt-2 space-y-1">
+                          <div><strong>טלפון:</strong> {authority.main_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>
+                          <div><strong>אימייל:</strong> {authority.email}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openEditDialog(authority)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDelete(authority.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
                     </div>
                   </div>
-                  {authority.supervisors && authority.supervisors.length > 0 && (
-                    <div className="pt-2 border-t">
-                      <strong className="text-sm">מפקחים:</strong>
-                      <div className="mt-2 space-y-2">
-                        {authority.supervisors.map((supervisor, i) => (
-                          <div key={i} className="text-sm bg-slate-50 p-2 rounded">
-                            <div><strong>שם:</strong> {supervisor.first_name} {supervisor.last_name}</div>
-                            {supervisor.role && <div className="text-muted-foreground mt-1"><strong>תפקיד:</strong> {supervisor.role}</div>}
-                            {supervisor.email && <div className="text-muted-foreground mt-1"><strong>אימייל:</strong> {supervisor.email}</div>}
-                            {supervisor.phone && <div className="text-muted-foreground mt-1"><strong>טלפון:</strong> {supervisor.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>}
-                          </div>
-                        ))}
+
+                  {/* כפתור הרחבה */}
+                  <div className="flex justify-center pt-2 border-t border-slate-200">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setExpandedAuthorityId(isExpanded ? null : authority.id)}
+                      className="text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <div className="flex items-center gap-1">
+                        {isExpanded ? (
+                          <>
+                            <span>הסתר פרטים</span>
+                            <ChevronUp className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        ) : (
+                          <>
+                            <span>הרחב פרטים</span>
+                            <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        )}
                       </div>
+                    </Button>
+                  </div>
+
+                  {/* פרטים מורחבים */}
+                  {isExpanded && (
+                    <div className="space-y-3 pt-3">
+                      {authority.supervisors && authority.supervisors.length > 0 && (
+                        <div>
+                          <strong className="text-sm">מפקחים:</strong>
+                          <div className="mt-2 space-y-2">
+                            {authority.supervisors.map((supervisor, i) => (
+                              <div key={i} className="text-sm bg-slate-50 p-2 rounded">
+                                <div><strong>שם:</strong> {supervisor.first_name} {supervisor.last_name}</div>
+                                {supervisor.role && <div className="text-muted-foreground mt-1"><strong>תפקיד:</strong> {supervisor.role}</div>}
+                                {supervisor.email && <div className="text-muted-foreground mt-1"><strong>אימייל:</strong> {supervisor.email}</div>}
+                                {supervisor.phone && <div className="text-muted-foreground mt-1"><strong>טלפון:</strong> {supervisor.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</div>}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => openEditDialog(authority)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(authority.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            )
+          })}
         </div>
       )}
 

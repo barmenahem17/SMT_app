@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { Card } from "@/components/ui/card"
 import { DynamicSection } from "@/components/dynamic-section"
-import { Plus, Pencil, Trash2, Building2, Briefcase, UserCheck, ChevronDown, ChevronUp } from "lucide-react"
+import { Plus, Pencil, Trash2, Building2, Briefcase, UserCheck, ChevronDown, ChevronUp, Search } from "lucide-react"
 import { unformatPhoneNumber } from "@/lib/format-phone"
 
 interface Parent {
@@ -111,6 +111,7 @@ export default function ChildrenPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingChild, setEditingChild] = useState<Child | null>(null)
   const [expandedChildId, setExpandedChildId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -404,6 +405,22 @@ export default function ChildrenPage() {
         </Button>
       </div>
 
+      {/* שורת חיפוש */}
+      {!loading && children.length > 0 && (
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="חפש לפי שם פרטי או שם משפחה..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-10"
+            />
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-12">טוען...</div>
       ) : children.length === 0 ? (
@@ -413,14 +430,23 @@ export default function ChildrenPage() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {children.map((child) => {
+          {children
+            .filter((child) => {
+              if (!searchQuery.trim()) return true
+              const query = searchQuery.toLowerCase()
+              return (
+                child.first_name.toLowerCase().includes(query) ||
+                child.last_name.toLowerCase().includes(query)
+              )
+            })
+            .map((child) => {
             const isExpanded = expandedChildId === child.id
             return (
             <Card key={child.id} className="p-6">
               <div className="flex items-start justify-between">
                 <div className="space-y-4 flex-1">
                   {/* פרטי הילד */}
-                  <div className="pb-3 border-b-2 border-primary/20">
+                  <div className="pb-3">
                     <h3 className="text-2xl font-bold text-primary">
                       {child.first_name} {child.last_name}
                     </h3>
@@ -446,23 +472,28 @@ export default function ChildrenPage() {
                   </div>
                   
                   {/* כפתור הרחבה */}
-                  <Button
-                    variant="outline"
-                    onClick={() => setExpandedChildId(isExpanded ? null : child.id)}
-                    className="w-full gap-2"
-                  >
-                    {isExpanded ? (
-                      <>
-                        <ChevronUp className="h-4 w-4" />
-                        הסתר פרטים
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4" />
-                        הרחב פרטים
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex justify-center pt-2 border-t border-slate-200">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setExpandedChildId(isExpanded ? null : child.id)}
+                      className="text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <div className="flex items-center gap-1">
+                        {isExpanded ? (
+                          <>
+                            <span>הסתר פרטים</span>
+                            <ChevronUp className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        ) : (
+                          <>
+                            <span>הרחב פרטים</span>
+                            <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                          </>
+                        )}
+                      </div>
+                    </Button>
+                  </div>
                   
                   {isExpanded && (
                     <div className="space-y-4 pt-4">
@@ -774,16 +805,18 @@ export default function ChildrenPage() {
             <div className="border-t-2 border-primary/30 pt-6 mt-6">
               <div className="flex flex-col items-center gap-3 mb-4">
                 <h3 className="text-lg font-semibold text-center">👥 הורים</h3>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addParent}
-                  className="gap-2 w-[140px]"
-                >
-                  <Plus className="h-4 w-4" />
-                  הוסף הורה
-                </Button>
+                {formData.parents.length === 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addParent}
+                    className="gap-2 w-[140px]"
+                  >
+                    הוסף הורה
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
 
               {formData.parents.length > 0 && (
@@ -867,16 +900,18 @@ export default function ChildrenPage() {
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Building2 className="h-5 w-5" /> מוסדות
                 </h3>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addInstitution}
-                  className="gap-2 w-[140px]"
-                >
-                  <Plus className="h-4 w-4" />
-                  הוסף מוסד
-                </Button>
+                {formData.assigned_institutions.length === 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addInstitution}
+                    className="gap-2 w-[140px]"
+                  >
+                    הוסף מוסד
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
 
               {formData.assigned_institutions.length > 0 && (
@@ -963,8 +998,8 @@ export default function ChildrenPage() {
                     }}
                     className="gap-2 w-[140px]"
                   >
-                    <Plus className="h-4 w-4" />
                     הוסף מלווה
+                    <Plus className="h-4 w-4" />
                   </Button>
                 ) : (
                   <Button
@@ -1008,16 +1043,18 @@ export default function ChildrenPage() {
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Briefcase className="h-5 w-5" /> גופים
                 </h3>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addAuthority}
-                  className="gap-2 w-[140px]"
-                >
-                  <Plus className="h-4 w-4" />
-                  הוסף גוף
-                </Button>
+                {formData.assigned_authorities.length === 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addAuthority}
+                    className="gap-2 w-[140px]"
+                  >
+                    הוסף גוף
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
 
               {formData.assigned_authorities.length > 0 && (
@@ -1028,7 +1065,8 @@ export default function ChildrenPage() {
                   onRemove={removeAuthority}
                   items={formData.assigned_authorities}
                   showNumbering={false}
-                  hideAddButton={true}
+                  centerAddButton={true}
+                  hideAddButton={false}
                   renderItem={(assignment, index) => {
                     const selectedAuthority = authorities.find(
                       a => a.id === assignment.authority_id
